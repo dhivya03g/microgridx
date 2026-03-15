@@ -1,0 +1,20 @@
+{
+"timestamp": "2026-03-15T16:00:00",
+
+"energy_status": {
+"solar_power": 520,
+"battery_level": 78,
+"predicted_demand": 430
+},
+
+"decision": {
+"energy_mode": "NORMAL_MODE",
+"system_action": "Supply loads and charge battery",
+"battery_action": "Charging"
+},
+
+"load_priority": {
+"critical_loads": "ON",
+"non_critical_loads": "ON"
+}
+}

@@ -1,0 +1,21 @@
+{
+"timestamp": "",
+
+"sensor_data": {
+"solar_power": 0,
+"battery_level": 0,
+"temperature": 0,
+"humidity": 0
+},
+
+"prediction_data": {
+"predicted_solar": 0,
+"predicted_demand": 0
+},
+
+"decision_data": {
+"energy_mode": "",
+"system_action": "",
+"battery_action": ""
+}
+}

@@ -1,0 +1,21 @@
+{
+"timestamp": "2026-03-15T16:00:00",
+
+"sensor_data": {
+"solar_power": 520,
+"battery_level": 78,
+"temperature": 31,
+"humidity": 60
+},
+
+"prediction_data": {
+"predicted_solar": 480,
+"predicted_demand": 430
+},
+
+"decision_data": {
+"energy_mode": "",
+"system_action": "",
+"battery_action": ""
+}
+}

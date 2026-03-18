@@ -8,14 +8,14 @@ from datetime import datetime
 with open("../data/sample_data.json", "r") as file:
     data = json.load(file)
 
-solar_power = data["sensor_data"]["solar_power"]
-battery_level = data["sensor_data"]["battery_level"]
-temperature = data["sensor_data"]["temperature"]
-humidity = data["sensor_data"]["humidity"]
+# Read from energy_status
+solar_power = data["energy_status"]["solar_power"]
+battery_level = data["energy_status"]["battery_level"]
+temperature = data["energy_status"]["temperature"]
+humidity = data["energy_status"]["humidity"]
 
-predicted_solar = data["prediction_data"]["predicted_solar"]
-predicted_demand = data["prediction_data"]["predicted_demand"]
-
+predicted_solar = data["energy_status"]["predicted_solar"]
+predicted_demand = data["energy_status"]["predicted_demand"]
 
 # ---------------------------------------
 # Step 2: Smart Energy Score (Weighted)
@@ -30,7 +30,6 @@ energy_score = (
     battery_weight * (battery_level * 10) -
     demand_weight * predicted_demand
 )
-
 
 # ---------------------------------------
 # Step 3: Decision Logic
@@ -54,20 +53,16 @@ else:
     battery_action = "Battery saving"
     non_critical_loads = "OFF"
 
-
 # ---------------------------------------
 # Step 4: System Health Indicator
 # ---------------------------------------
 
 if energy_mode == "NORMAL_MODE":
     system_health = "GREEN"
-
 elif energy_mode == "ECO_MODE":
     system_health = "YELLOW"
-
 else:
     system_health = "RED"
-
 
 # ---------------------------------------
 # Step 5: Create Output Data
@@ -100,25 +95,22 @@ output = {
     }
 }
 
-
 # ---------------------------------------
-# Step 6: Save Decision Output
+# Step 6: Save Output
 # ---------------------------------------
 
 with open("../data/decision_output.json", "w") as file:
     json.dump(output, file, indent=4)
 
-
 # ---------------------------------------
-# Step 7: Console Output (Debug)
+# Step 7: Print Output
 # ---------------------------------------
 
-print("-------- MicroGridX Decision Layer --------")
-print("Solar Power:", solar_power, "W")
-print("Battery Level:", battery_level, "%")
-print("Predicted Demand:", predicted_demand, "W")
-
-print("\nSmart Energy Score:", round(energy_score, 2))
+print("-------- Decision Layer --------")
+print("Solar Power:", solar_power)
+print("Battery Level:", battery_level)
+print("Predicted Demand:", predicted_demand)
+print("Energy Score:", round(energy_score, 2))
 
 print("\nDecision:")
 print("Energy Mode:", energy_mode)

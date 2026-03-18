@@ -1,312 +1,151 @@
-// ----------------------------
-// SENSOR DATA (temporary demo)
-// ----------------------------
+// ------------------------------------
+// BACKEND API INTEGRATION (COMMUNITY LAYER)
+// ------------------------------------
 
-let solarPower = 280
-let batteryLevel = 78
-let temperature = 34
+async function loadBackendData() {
 
-// update all matching elements (because IDs repeat in twin view)
+    try {
 
-document.querySelectorAll("#solar").forEach(el=>{
-el.innerText = solarPower + " W"
-})
+        // Solar Prediction
+        const solarRes = await fetch("http://127.0.0.1:5000/predict-solar")
+        const solarData = await solarRes.json()
 
-document.querySelectorAll("#battery").forEach(el=>{
-el.innerText = batteryLevel + "%"
-})
+        // Battery Status
+        const batteryRes = await fetch("http://127.0.0.1:5000/battery-status")
+        const batteryData = await batteryRes.json()
 
-document.querySelectorAll("#esp").forEach(el=>{
-el.innerText = "Online"
-})
+        // Energy Matching
+        const energyRes = await fetch("http://127.0.0.1:5000/energy-match")
+        const energyData = await energyRes.json()
 
-document.querySelectorAll("#temp").forEach(el=>{
-el.innerText = temperature + " °C"
-})
+        // Update UI (override demo values)
 
+        document.querySelectorAll("#solar").forEach(el=>{
+            el.innerText = solarData.predicted + " W"
+        })
 
-// ----------------------------
-// BATTERY INDICATOR BAR
-// ----------------------------
+        document.querySelectorAll("#battery").forEach(el=>{
+            el.innerText = batteryData.level + "%"
+        })
 
-let batteryBar = document.getElementById("battery-level")
+        // Update system status based on real battery
+        let status = document.getElementById("status")
+        if(status){
+            if (batteryData.level > 20) {
+                status.innerText = "System Status: Healthy"
+                status.style.color = "lightgreen"
+            } else {
+                status.innerText = "Battery Fault ⚠"
+                status.style.color = "red"
+            }
+        }
 
-if (batteryBar) {
+        console.log("Energy Transfers:", energyData)
 
-batteryBar.style.width = batteryLevel + "%"
+    } catch (error) {
 
-if (batteryLevel > 60) {
-batteryBar.style.background = "lime"
-}
-else if (batteryLevel > 30) {
-batteryBar.style.background = "yellow"
-}
-else {
-batteryBar.style.background = "red"
-}
+        console.log("Backend not connected yet")
 
-}
-
-
-// ----------------------------
-// SYSTEM STATUS
-// ----------------------------
-
-let status = document.getElementById("status")
-
-if(status){
-
-if (batteryLevel > 20) {
-
-status.innerText = "System Status: Healthy"
-status.style.color = "lightgreen"
-
-}
-else {
-
-status.innerText = "Battery Fault ⚠"
-status.style.color = "red"
-
-}
-
-}
-
-
-// ----------------------------
-// SYSTEM BADGE
-// ----------------------------
-
-let badge = document.getElementById("system_badge")
-
-if(badge){
-
-if(batteryLevel > 20){
-
-badge.innerText = "✔ STATUS: HEALTHY"
-badge.style.background = "#22c55e"
-
-}
-else{
-
-badge.innerText = "⚠ STATUS: FAULT"
-badge.style.background = "red"
-
-}
-
-}
-
-
-// ----------------------------
-// ALERTS LOG
-// ----------------------------
-
-let alerts = document.getElementById("alerts")
-
-if(alerts){
-
-alerts.innerHTML = ""
-
-if(batteryLevel < 20){
-alerts.innerHTML += "<li>⚠ Battery Low</li>"
-}
-
-alerts.innerHTML += "<li>Solar output: " + solarPower + " W</li>"
-alerts.innerHTML += "<li>Temperature: " + temperature + " °C</li>"
+    }
 
 }
 
 
 // ------------------------------------
-// DECISION LAYER DATA (JSON FILE)
-// ------------------------------------
-
-async function loadDecisionData() {
-
-try {
-
-const response = await fetch("../data/decision_output.json")
-const data = await response.json()
-
-document.getElementById("energy_mode").innerText = data.energy_mode
-document.getElementById("system_health").innerText = data.system_health
-document.getElementById("battery_action").innerText = data.battery_action
-document.getElementById("load_priority").innerText = data.load_priority
-
-
-// ENERGY MODE COLOR CONTROL
-
-const energyModeElement = document.getElementById("energy_mode")
-
-if (data.energy_mode === "EMERGENCY") {
-
-energyModeElement.style.color = "red"
-stopEnergyFlow()
-
-}
-else if (data.energy_mode === "ECO") {
-
-energyModeElement.style.color = "yellow"
-slowEnergyFlow()
-
-}
-else {
-
-energyModeElement.style.color = "lightgreen"
-normalEnergyFlow()
-
-}
-
-}
-catch (error) {
-
-console.log("Decision layer data not available yet")
-
-}
-
-}
-
-
-// ------------------------------------
-// ENERGY FLOW ANIMATION CONTROL
-// ------------------------------------
-
-function normalEnergyFlow() {
-
-document.querySelectorAll(".arrow").forEach(a=>{
-a.style.animationDuration = "1s"
-})
-
-}
-
-function slowEnergyFlow() {
-
-document.querySelectorAll(".arrow").forEach(a=>{
-a.style.animationDuration = "2s"
-})
-
-}
-
-function stopEnergyFlow() {
-
-document.querySelectorAll(".arrow").forEach(a=>{
-a.style.animation = "none"
-})
-
-}
-
-
-// ------------------------------------
-// COMMUNITY MICROGRID DEMO
-// ------------------------------------
-
-let houseA = 2.5
-let houseB = 1.2
-let houseC = 0.8
-
-if(document.getElementById("houseA")){
-document.getElementById("houseA").innerText = houseA + " kW"
-}
-
-if(document.getElementById("houseB")){
-document.getElementById("houseB").innerText = houseB + " kW"
-}
-
-if(document.getElementById("houseC")){
-document.getElementById("houseC").innerText = houseC + " kW"
-}
-
-
-// ------------------------------------
-// ENERGY GRAPH (Chart.js)
-// ------------------------------------
-
-const chartCanvas = document.getElementById("energyChart")
-
-let energyChart
-
-if(chartCanvas){
-
-const ctx = chartCanvas.getContext("2d")
-
-energyChart = new Chart(ctx,{
-type:"line",
-
-data:{
-labels:[],
-datasets:[
-
-{
-label:"Solar Power (W)",
-borderColor:"cyan",
-data:[],
-fill:false
-},
-
-{
-label:"Battery Level (%)",
-borderColor:"lime",
-data:[],
-fill:false
-}
-
-]
-},
-
-options:{
-responsive:true,
-plugins:{
-legend:{
-labels:{color:"white"}
-}
-},
-scales:{
-x:{
-ticks:{color:"white"}
-},
-y:{
-ticks:{color:"white"}
-}
-}
-}
-
-})
-
-}
-
-
-// update graph every refresh
-
-function updateGraph(){
-
-if(!energyChart) return
-
-let time = new Date().toLocaleTimeString()
-
-energyChart.data.labels.push(time)
-energyChart.data.datasets[0].data.push(solarPower)
-energyChart.data.datasets[1].data.push(batteryLevel)
-
-if(energyChart.data.labels.length > 10){
-
-energyChart.data.labels.shift()
-energyChart.data.datasets[0].data.shift()
-energyChart.data.datasets[1].data.shift()
-
-}
-
-energyChart.update()
-
-}
-
-
-// ------------------------------------
-// AUTO REFRESH
+// AUTO REFRESH BACKEND DATA
 // ------------------------------------
 
 setInterval(()=>{
-loadDecisionData()
-updateGraph()
-},2000)
+    loadBackendData()
+},3000)
 
-loadDecisionData()
-updateGraph()
+// First call
+loadBackendData()
+
+// ----------------------------
+// LOAD HOUSES (FIXED)
+// ----------------------------
+
+async function loadHouses(){
+
+    try{
+
+        const res = await fetch("http://127.0.0.1:5000/houses")
+        const data = await res.json()
+
+        let container = document.getElementById("houses")
+
+        if(container){
+
+            container.innerHTML = ""
+
+            data.forEach(h => {
+                container.innerHTML += `
+                <div class="box">${h.house_id}</div>
+                `
+            })
+        }
+
+    }catch(err){
+        console.log("Error loading houses")
+    }
+
+}
+
+// ----------------------------
+// ADD HOUSE (FIXED)
+// ----------------------------
+
+async function addHouse(){
+
+    try{
+
+        await fetch("http://127.0.0.1:5000/add-house",{
+            method:"POST"
+        })
+
+        loadHouses() // refresh after adding
+
+    }catch(err){
+        console.log("Error adding house")
+    }
+
+}
+
+// ----------------------------
+// LOAD TRANSFERS
+// ----------------------------
+
+async function loadTransfers(){
+
+    try{
+
+        const res = await fetch("http://127.0.0.1:5000/energy-match")
+        const data = await res.json()
+
+        let box = document.getElementById("transfers")
+
+        if(box){
+
+            box.innerHTML = ""
+
+            data.forEach(t=>{
+                box.innerHTML += `<li>⚡ ${t.from} → ${t.to} : ${t.energy} W</li>`
+            })
+
+        }
+
+    }catch(err){
+        console.log("Transfer error")
+    }
+
+}
+
+// AUTO LOAD
+setInterval(()=>{
+    loadHouses()
+    loadTransfers()
+},3000)
+
+loadHouses()
+loadTransfers()

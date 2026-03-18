@@ -1,0 +1,11 @@
+let status = document.getElementById("systemStatus")
+
+if(data.decision.energy_mode==="NORMAL_MODE"){
+status.style.color="#22c55e"
+}
+else if(data.decision.energy_mode==="ECO_MODE"){
+status.style.color="#facc15"
+}
+else{
+status.style.color="#ef4444"
+}

@@ -1,119 +1,75 @@
 import json
 from datetime import datetime
 
+def run_decision_engine():
 
-# Step 1: Read Input Data
+    with open("../data/sample_data.json") as f:
+        data = json.load(f)
 
+    solar = data["sensor_data"]["solar_power"]
+    battery = data["sensor_data"]["battery_level"]
+    temp = data["sensor_data"]["temperature"]
+    demand = data["prediction_data"]["predicted_demand"]
 
-with open("../data/sample_data.json", "r") as file:
-    data = json.load(file)
+    # ENERGY SCORE
+    energy_score = (0.5 * solar) + (0.3 * battery * 10) - (0.2 * demand)
 
-# Read from energy_status
-solar_power = data["energy_status"]["solar_power"]
-battery_level = data["energy_status"]["battery_level"]
-temperature = data["energy_status"]["temperature"]
-humidity = data["energy_status"]["humidity"]
+    # MODE
+    if energy_score > 350:
+        mode = "NORMAL"
+    elif energy_score > 150:
+        mode = "ECO"
+    else:
+        mode = "EMERGENCY"
 
-predicted_solar = data["energy_status"]["predicted_solar"]
-predicted_demand = data["energy_status"]["predicted_demand"]
+    # 🔥 1. ENERGY PERSONALITY
+    if demand > solar * 1.5:
+        personality = "Aggressive Consumer"
+    elif solar > demand:
+        personality = "Energy Producer"
+    else:
+        personality = "Balanced Node"
 
+    # 🔮 2. TIME TRAVEL
+    future = energy_score - 150
+    future_mode = "ECO" if future < 200 else "NORMAL"
 
-# Step 2: Smart Energy Score (Weighted)
+    # 🧠 3. ETHICS
+    ethical = "Protect critical loads" if mode == "EMERGENCY" else "Normal supply"
 
+    # ⚡ 4. LOSS DETECTOR
+    loss = solar - demand
+    inefficiency = "Energy Loss" if loss > 100 else "Efficient"
 
-solar_weight = 0.5
-battery_weight = 0.3
-demand_weight = 0.2
+    # 🧬 6. DNA
+    dna = [solar, battery, demand]
 
-energy_score = (
-    solar_weight * solar_power +
-    battery_weight * (battery_level * 10) -
-    demand_weight * predicted_demand
-)
+    # ⚠️ 7. FAILURE SCORE
+    failure_score = demand - (solar + battery * 5)
+    failure = "HIGH" if failure_score > 200 else "LOW"
 
+    # 🌍 8. CARBON
+    carbon = round(solar * 0.0007, 2)
 
-# Step 3: Decision Logic
+    # 🧠 9. CONFIDENCE
+    confidence = min(100, energy_score / 5)
 
-
-if energy_score >= 350:
-    energy_mode = "NORMAL_MODE"
-    system_action = "Supply loads and charge battery"
-    battery_action = "Charging"
-    non_critical_loads = "ON"
-
-elif energy_score >= 150:
-    energy_mode = "ECO_MODE"
-    system_action = "Reduce non-critical loads"
-    battery_action = "Use battery backup"
-    non_critical_loads = "OFF"
-
-else:
-    energy_mode = "EMERGENCY_MODE"
-    system_action = "Run critical loads only"
-    battery_action = "Battery saving"
-    non_critical_loads = "OFF"
-
-
-# Step 4: System Health Indicator
-
-
-if energy_mode == "NORMAL_MODE":
-    system_health = "GREEN"
-elif energy_mode == "ECO_MODE":
-    system_health = "YELLOW"
-else:
-    system_health = "RED"
-
-
-# Step 5: Create Output Data
-
-
-output = {
-    "timestamp": datetime.now().isoformat(),
-
-    "energy_status": {
-        "solar_power": solar_power,
-        "battery_level": battery_level,
-        "temperature": temperature,
-        "humidity": humidity,
-        "predicted_solar": predicted_solar,
-        "predicted_demand": predicted_demand,
-        "energy_score": round(energy_score, 2)
-    },
-
-    "decision": {
-        "energy_mode": energy_mode,
-        "system_action": system_action,
-        "battery_action": battery_action
-    },
-
-    "system_health": system_health,
-
-    "load_priority": {
-        "critical_loads": "ON",
-        "non_critical_loads": non_critical_loads
+    return {
+        "timestamp": datetime.now().isoformat(),
+        "energy_status": {
+            "solar": solar,
+            "battery": battery,
+            "temperature": temp,
+            "demand": demand,
+            "score": energy_score
+        },
+        "mode": mode,
+        "personality": personality,
+        "future_mode": future_mode,
+        "ethics": ethical,
+        "loss": inefficiency,
+        "dna": dna,
+        "failure": failure,
+        "carbon": carbon,
+        "confidence": confidence
     }
-}
-
-
-# Step 6: Save Output
-
-
-with open("../data/decision_output.json", "w") as file:
-    json.dump(output, file, indent=4)
-
-# Step 7: Print Output
-
-
-print("-------- Decision Layer --------")
-print("Solar Power:", solar_power)
-print("Battery Level:", battery_level)
-print("Predicted Demand:", predicted_demand)
-print("Energy Score:", round(energy_score, 2))
-
-print("\nDecision:")
-print("Energy Mode:", energy_mode)
-print("System Action:", system_action)
-print("Battery Action:", battery_action)
-
-print("\nSystem Health:", system_health)

@@ -1,20 +1,22 @@
 {
-"timestamp": "2026-03-15T16:00:00",
-
-"energy_status": {
-"solar_power": 520,
-"battery_level": 78,
-"predicted_demand": 430
-},
-
-"decision": {
-"energy_mode": "NORMAL_MODE",
-"system_action": "Supply loads and charge battery",
-"battery_action": "Charging"
-},
-
-"load_priority": {
-"critical_loads": "ON",
-"non_critical_loads": "ON"
-}
+    "timestamp": "2026-03-18T19:56:03.009046",
+    "energy_status": {
+        "solar_power": 520,
+        "battery_level": 78,
+        "temperature": 31,
+        "humidity": 60,
+        "predicted_solar": 480,
+        "predicted_demand": 430,
+        "energy_score": 408.0
+    },
+    "decision": {
+        "energy_mode": "NORMAL_MODE",
+        "system_action": "Supply loads and charge battery",
+        "battery_action": "Charging"
+    },
+    "system_health": "GREEN",
+    "load_priority": {
+        "critical_loads": "ON",
+        "non_critical_loads": "ON"
+    }
 }

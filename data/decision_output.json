@@ -1,13 +1,13 @@
 {
-    "timestamp": "2026-03-18T19:56:03.009046",
+    "timestamp": "2026-03-19T00:13:59.549209",
     "energy_status": {
         "solar_power": 520,
         "battery_level": 78,
         "temperature": 31,
         "humidity": 60,
-        "predicted_solar": 480,
-        "predicted_demand": 430,
-        "energy_score": 408.0
+        "predicted_solar": 467.57,
+        "predicted_demand": 568.0,
+        "energy_score": 380.4
     },
     "decision": {
         "energy_mode": "NORMAL_MODE",

@@ -1,0 +1,29 @@
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+text-align:center;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:20px;
+padding:20px;
+}
+
+.card{
+padding:20px;
+border:2px solid cyan;
+border-radius:10px;
+box-shadow:0 0 20px cyan;
+}
+
+.alert{
+position:fixed;
+top:20px;
+right:20px;
+background:red;
+padding:10px;
+border-radius:10px;
+}

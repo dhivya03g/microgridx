@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html>
 
@@ -24,8 +23,6 @@ color:#00ffff;
 text-shadow:0 0 20px cyan;
 }
 
-/* MAIN LAYOUT */
-
 .main-layout{
 display:flex;
 justify-content:center;
@@ -34,8 +31,6 @@ margin-top:40px;
 flex-wrap:wrap;
 padding:20px;
 }
-
-/* HARDWARE PANEL */
 
 .hardware-panel{
 width:540px;
@@ -47,8 +42,6 @@ box-shadow:0 0 40px cyan;
 text-align:center;
 }
 
-/* 3D CUBE */
-
 .cube-wrapper{
 perspective:1200px;
 display:flex;
@@ -57,38 +50,24 @@ margin-top:30px;
 }
 
 .twin-cube{
-
 width:360px;
 height:360px;
-
 position:relative;
-
 transform-style:preserve-3d;
-
 animation:rotateCube 16s linear infinite;
-
 }
 
 .cube-face{
-
 position:absolute;
-
 width:360px;
 height:360px;
-
 border:2px solid cyan;
-
 background:rgba(0,255,255,0.06);
-
 display:flex;
 flex-direction:column;
 align-items:center;
 justify-content:center;
-
-box-shadow:
-0 0 40px cyan,
-inset 0 0 50px rgba(0,255,255,0.4);
-
+box-shadow:0 0 40px cyan,inset 0 0 50px rgba(0,255,255,0.4);
 }
 
 .cube-face img{
@@ -97,21 +76,15 @@ margin-bottom:10px;
 filter:drop-shadow(0 0 15px cyan);
 }
 
-/* SENSOR BLINK */
-
 .sensor{
 animation:sensorBlink 1.5s infinite;
 }
 
 @keyframes sensorBlink{
-
 0%{filter:drop-shadow(0 0 5px cyan);}
 50%{filter:drop-shadow(0 0 30px lime);}
 100%{filter:drop-shadow(0 0 5px cyan);}
-
 }
-
-/* FACE POSITIONS */
 
 .front{ transform:translateZ(180px); }
 .back{ transform:rotateY(180deg) translateZ(180px); }
@@ -120,54 +93,19 @@ animation:sensorBlink 1.5s infinite;
 .top{ transform:rotateX(90deg) translateZ(180px); }
 .bottom{ transform:rotateX(-90deg) translateZ(180px); }
 
-/* ROTATION */
-
 @keyframes rotateCube{
-
 0%{ transform:rotateX(-18deg) rotateY(0deg); }
-
 100%{ transform:rotateX(-18deg) rotateY(360deg); }
-
 }
-
-/* POWER FLOW LINE */
-
-.power-line{
-
-width:80px;
-height:3px;
-background:cyan;
-margin:15px auto;
-animation:powerFlow 1s infinite alternate;
-
-}
-
-@keyframes powerFlow{
-
-from{background:cyan;}
-to{background:lime;}
-
-}
-
-/* DASHBOARD */
 
 .digital-panel{
-
 width:720px;
-
 padding:20px;
-
 border-radius:14px;
-
 border:2px solid cyan;
-
 background:#020617;
-
 box-shadow:0 0 40px cyan;
-
 }
-
-/* SENSOR CARDS */
 
 .container{
 display:flex;
@@ -178,23 +116,13 @@ margin-top:25px;
 }
 
 .card{
-
 width:200px;
 padding:20px;
 border-radius:12px;
 border:2px solid cyan;
 background:rgba(0,255,255,0.07);
 box-shadow:0 0 25px cyan;
-transition:0.3s;
-
 }
-
-.card:hover{
-transform:scale(1.05);
-box-shadow:0 0 35px cyan;
-}
-
-/* BATTERY BAR */
 
 .battery-bar{
 width:100%;
@@ -207,58 +135,15 @@ overflow:hidden;
 
 #battery-level{
 height:100%;
-width:78%;
 background:lime;
-animation:charging 3s infinite alternate;
 }
-
-@keyframes charging{
-
-0%{width:60%;}
-100%{width:95%;}
-
-}
-
-/* STATUS */
 
 .status{
 text-align:center;
 font-size:22px;
 margin-top:20px;
 color:#22c55e;
-text-shadow:0 0 15px lime;
 }
-
-/* ENERGY FLOW */
-
-.flow{
-display:flex;
-justify-content:center;
-align-items:center;
-gap:20px;
-margin-top:40px;
-}
-
-.node{
-padding:12px 22px;
-border-radius:10px;
-border:2px solid cyan;
-background:rgba(0,255,255,0.1);
-box-shadow:0 0 15px cyan;
-}
-
-.arrow{
-font-size:26px;
-color:cyan;
-animation:flow 1s infinite alternate;
-}
-
-@keyframes flow{
-from{opacity:0.4; transform:translateX(-6px);}
-to{opacity:1; transform:translateX(6px);}
-}
-
-/* ALERTS */
 
 .alerts{
 margin-top:30px;
@@ -269,17 +154,24 @@ background:rgba(0,255,255,0.05);
 }
 
 .alert{
-font-size:13px;
 margin-top:6px;
 }
 
-/* GRAPH */
-
 canvas{
 margin-top:30px;
-background:#020617;
+}
+
+/* 🔥 POPUP STYLE */
+.popup{
+position:fixed;
+top:20px;
+right:20px;
+padding:15px 20px;
 border-radius:10px;
-padding:10px;
+color:white;
+font-size:14px;
+z-index:9999;
+box-shadow:0 0 20px black;
 }
 
 </style>
@@ -292,54 +184,38 @@ padding:10px;
 
 <div class="main-layout">
 
-<!-- HARDWARE CUBE -->
-
 <div class="hardware-panel">
-
 <h2>Digital Twin Hardware</h2>
 
 <div class="cube-wrapper">
-
 <div class="twin-cube">
 
 <div class="cube-face front">
-<img src="./images/solar.png">
+<img src="images/solar.png">
 <p>Solar Panel</p>
-<div class="power-line"></div>
 </div>
 
 <div class="cube-face right">
-<img src="./images/battery.png">
+<img src="images/battery.png">
 <p>Battery</p>
-<div class="power-line"></div>
 </div>
 
 <div class="cube-face left">
-<img class="sensor" src="./images/esp32.png">
+<img class="sensor" src="images/esp32.png">
 <p>ESP32</p>
 </div>
 
 <div class="cube-face back">
-<img class="sensor" src="./images/dht22.png">
+<img class="sensor" src="images/dht22.png">
 <p>DHT22 Sensor</p>
 </div>
 
-<div class="cube-face top">
-<p>MicroGridX</p>
-</div>
-
-<div class="cube-face bottom">
-<p>Energy System</p>
-</div>
+<div class="cube-face top"><p>MicroGridX</p></div>
+<div class="cube-face bottom"><p>Energy System</p></div>
 
 </div>
-
 </div>
-
 </div>
-
-
-<!-- DIGITAL DASHBOARD -->
 
 <div class="digital-panel">
 
@@ -355,16 +231,7 @@ padding:10px;
 <div class="card">
 <h3>🔋 Battery</h3>
 <p id="battery">--</p>
-
-<div class="battery-bar">
-<div id="battery-level"></div>
-</div>
-
-</div>
-
-<div class="card">
-<h3>🧠 ESP32</h3>
-<p>Online</p>
+<div class="battery-bar"><div id="battery-level"></div></div>
 </div>
 
 <div class="card">
@@ -372,32 +239,27 @@ padding:10px;
 <p id="temp">--</p>
 </div>
 
+<div class="card">
+<h3>🔮 Predicted Demand</h3>
+<p id="prediction">--</p>
+</div>
+
 </div>
 
 <div class="status" id="systemStatus">
-System Status: Waiting for data...
+System Status: Waiting...
 </div>
 
-<div class="flow">
-
-<div class="node">Solar</div>
-<div class="arrow">⚡</div>
-<div class="node">Battery</div>
-<div class="arrow">⚡</div>
-<div class="node">ESP32</div>
-<div class="arrow">⚡</div>
-<div class="node">Load</div>
-
+<div class="alerts" id="alertsBox">
+<b>⚠ Smart Alerts</b>
+<div class="alert" id="alert1"></div>
+<div class="alert" id="alert2"></div>
+<div class="alert" id="alert3"></div>
 </div>
 
-<div class="alerts">
-
-<b>Alerts Log</b>
-
-<div class="alert">✔ Battery charging</div>
-<div class="alert">✔ Sensors transmitting data</div>
-<div class="alert">✔ Solar output normal</div>
-
+<!-- 📡 GSM DISPLAY -->
+<div id="gsmBox" style="margin-top:15px;padding:10px;border:1px solid cyan;border-radius:8px;">
+📡 GSM Status: Ready
 </div>
 
 <canvas id="energyChart"></canvas>
@@ -406,80 +268,92 @@ System Status: Waiting for data...
 
 </div>
 
-
 <script>
 
-/* FETCH DATA FROM FLASK BACKEND */
 
+function showPopup(message,color){
+let p=document.createElement("div")
+p.className="popup"
+p.style.background=color
+p.innerText=message
+document.body.appendChild(p)
+setTimeout(()=>p.remove(),3000)
+}
+
+
+function sendSMS(msg){
+document.getElementById("gsmBox").innerText="📡 SMS Sent: "+msg
+console.log("SMS:",msg)
+}
+
+// FETCH DATA
 async function fetchData(){
-
 try{
+const res=await fetch("http://127.0.0.1:5000/api/data")
+const data=await res.json()
 
-const response = await fetch("http://127.0.0.1:5000/api/data")
+let solar=data.energy_status.solar_power
+let battery=data.energy_status.battery_level
+let temp=data.energy_status.temperature
+let demand=data.energy_status.predicted_demand
 
-const data = await response.json()
+document.getElementById("solar").innerText=solar+" W"
+document.getElementById("battery").innerText=battery+"%"
+document.getElementById("temp").innerText=temp+" °C"
+document.getElementById("prediction").innerText=demand+" W"
 
-document.getElementById("solar").innerText =
-data.energy_status.solar_power + " W"
+document.getElementById("battery-level").style.width=battery+"%"
+document.getElementById("systemStatus").innerText="Mode: "+data.decision.energy_mode
 
-document.getElementById("battery").innerText =
-data.energy_status.battery_level + "%"
+// ALERTS
 
-document.getElementById("temp").innerText =
-data.energy_status.temperature + " °C"
-
-document.getElementById("battery-level").style.width =
-data.energy_status.battery_level + "%"
-
-document.getElementById("systemStatus").innerText =
-"System Mode: " + data.decision.energy_mode
-
-}
-catch(error){
-
-document.getElementById("systemStatus").innerText =
-"Backend not connected"
-
+// Low Battery
+if(battery<25){
+showPopup("⚠ Low Battery - Load Shifted","red")
+sendSMS("Low Battery Alert")
+alert1.innerText="⚠ Low Battery"
 }
 
+// High Demand
+if(demand>solar){
+showPopup("⚡ High Demand - Using Backup","orange")
+sendSMS("High Demand Alert")
+alert2.innerText="⚡ Demand > Supply"
 }
 
-/* REFRESH EVERY 2 SECONDS */
+// High Temp
+if(temp>40){
+showPopup("🔥 Overheat Warning","red")
+sendSMS("High Temperature Alert")
+alert3.innerText="🔥 High Temperature"
+}
+
+// Critical Fault
+if(battery<15 && demand>solar){
+showPopup("❌ CRITICAL FAULT - Emergency Mode","darkred")
+sendSMS("Critical Fault Alert")
+}
+
+}catch{
+document.getElementById("systemStatus").innerText="Backend not connected"
+}
+}
 
 setInterval(fetchData,2000)
 
-
-/* ENERGY GRAPH */
-
-const ctx=document.getElementById('energyChart')
-
-new Chart(ctx,{
-
-type:'line',
-
+// GRAPH
+new Chart(document.getElementById("energyChart"),{
+type:"line",
 data:{
-labels:["1","2","3","4","5","6"],
-
+labels:["1","2","3","4","5"],
 datasets:[
-{
-label:"Solar Power",
-data:[210,240,260,280,300,320],
-borderColor:"cyan"
-},
-
-{
-label:"Battery %",
-data:[70,72,75,78,80,82],
-borderColor:"lime"
-}
-
+{label:"Solar",data:[200,240,260,280,300]},
+{label:"Battery",data:[70,72,75,78,80]}
 ]
 }
-
 })
 
 </script>
 
 </body>
 </html>
-```

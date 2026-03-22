@@ -3,6 +3,9 @@ from flask_cors import CORS
 import sys
 import os
 
+# 🔥 NEW IMPORT (added)
+from flask import send_from_directory
+
 # Fix import path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -17,6 +20,16 @@ CORS(app)
 def home():
     return "MicroGridX Backend Running"
 
+
+# 🔥 NEW ROUTE (added for frontend)
+@app.route("/dashboard")
+def dashboard():
+    return send_from_directory(
+        os.path.join(os.path.dirname(__file__), "../digital-twin"),
+        "index.html"
+    )
+
+
 @app.route("/api/data")
 def get_data():
     try:
@@ -24,6 +37,7 @@ def get_data():
         return jsonify(result)
     except Exception as e:
         return jsonify({"error": str(e)})
+
 
 # 🔥 Run server (accessible to frontend)
 if __name__ == "__main__":

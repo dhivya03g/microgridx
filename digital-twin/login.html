@@ -88,6 +88,7 @@ text-decoration:underline;
 <input id="password" type="password" placeholder="Password">
 
 <button onclick="login()">Login</button>
+<button onclick="signup()">Sign Up</button>
 
 <div class="links">
 <span onclick="forgot()">Forgot Password?</span>
@@ -114,6 +115,26 @@ if(data.status==="success"){
 window.location.href="/dashboard"
 }else{
 alert("Invalid Credentials ❌")
+}
+}
+
+async function signup(){
+
+let u=document.getElementById("username").value
+let p=document.getElementById("password").value
+
+const res = await fetch("/signup", {
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({username:u,password:p})
+})
+
+const data = await res.json()
+
+if(data.status==="success"){
+alert("Account created ✅")
+}else{
+alert(data.message)
 }
 }
 

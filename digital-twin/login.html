@@ -1,68 +1,97 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Login - MicroGridX</title>
+<title>MicroGridX Login</title>
 
 <style>
 body{
-background:#020617;
-color:white;
-font-family:Segoe UI;
+margin:0;
+height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-height:100vh;
+background:linear-gradient(135deg,#020617,#0f172a);
+font-family:Segoe UI;
+color:white;
 }
 
-.box{
-background:#0f172a;
-padding:30px;
-border-radius:10px;
-width:300px;
-box-shadow:0 0 20px black;
+/* glass card */
+.card{
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(10px);
+padding:40px;
+border-radius:15px;
+width:320px;
+box-shadow:0 0 30px rgba(0,0,0,0.5);
+text-align:center;
 }
 
+/* title */
+h2{
+color:#38bdf8;
+margin-bottom:20px;
+}
+
+/* input */
 input{
 width:100%;
-padding:10px;
-margin-top:10px;
+padding:12px;
+margin-top:12px;
 background:#020617;
 border:1px solid #334155;
 color:white;
-border-radius:6px;
+border-radius:8px;
 }
 
+/* button */
 button{
 width:100%;
-padding:10px;
-margin-top:15px;
+padding:12px;
+margin-top:20px;
 background:#38bdf8;
 border:none;
 color:black;
+font-weight:bold;
 cursor:pointer;
-border-radius:6px;
+border-radius:8px;
+transition:0.3s;
 }
 
-a{
+button:hover{
+background:#0ea5e9;
+}
+
+/* links */
+.links{
+margin-top:15px;
+font-size:13px;
+color:#94a3b8;
+}
+
+.links span{
+cursor:pointer;
 color:#38bdf8;
-font-size:12px;
-cursor:pointer;
 }
 
+.links span:hover{
+text-decoration:underline;
+}
 </style>
 </head>
 
 <body>
 
-<div class="box">
-<h2>Login</h2>
+<div class="card">
+<h2>⚡ MicroGridX</h2>
 
 <input id="username" placeholder="Username">
 <input id="password" type="password" placeholder="Password">
 
 <button onclick="login()">Login</button>
 
-<p><a onclick="forgotPassword()">Forgot Password?</a></p>
+<div class="links">
+<span onclick="forgot()">Forgot Password?</span>
+</div>
 
 </div>
 
@@ -73,19 +102,23 @@ async function login(){
 let u=document.getElementById("username").value
 let p=document.getElementById("password").value
 
-// DEMO AUTH
-if(u==="admin" && p==="1234"){
-localStorage.setItem("user",u)
-window.location.href="index.html"
-}
-else{
-alert("Invalid Credentials")
+const res = await fetch("/login", {
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({username:u,password:p})
+})
+
+const data = await res.json()
+
+if(data.status==="success"){
+window.location.href="/dashboard"
+}else{
+alert("Invalid Credentials ❌")
 }
 }
 
-// FORGOT PASSWORD
-function forgotPassword(){
-alert("Demo Password: admin / 1234")
+function forgot(){
+alert("Demo: Contact Admin 😄")
 }
 
 </script>

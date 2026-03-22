@@ -4,6 +4,9 @@ import os
 import sys
 import json
 
+# 🔥 NEW (for encryption)
+from werkzeug.security import generate_password_hash, check_password_hash
+
 # Fix import path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from decision_layer.decision_engine import run_decision_engine
@@ -58,9 +61,12 @@ def signup():
         if u["username"] == username:
             return jsonify({"status": "fail", "message": "User already exists"})
 
+    # 🔥 NEW (hash password)
+    hashed_password = generate_password_hash(password)
+
     users.append({
         "username": username,
-        "password": password
+        "password": hashed_password
     })
 
     save_users(users)
@@ -81,7 +87,8 @@ def login():
     users = load_users()
 
     for u in users:
-        if u["username"] == username and u["password"] == password:
+        # 🔥 MODIFIED (secure check)
+        if u["username"] == username and check_password_hash(u["password"], password):
             session["user"] = username
             return jsonify({"status": "success"})
 

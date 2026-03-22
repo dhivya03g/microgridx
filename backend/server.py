@@ -63,15 +63,15 @@ def dashboard():
         "index.html"
     )
 
-# 🔥 API
-@app.route("/api/data")
-def get_data():
-    try:
-        result = run_decision_engine()
-        return jsonify(result)
-    except Exception as e:
-        return jsonify({"error": str(e)})
+@app.route("/login", methods=["POST"])
+def login():
+    data = request.json
 
-# 🚀 RUN SERVER
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
+    username = data.get("username")
+    password = data.get("password")
+
+    # 🔥 DEMO LOGIN
+    if username == "admin" and password == "1234":
+        return jsonify({"status": "success"})
+    else:
+        return jsonify({"status": "fail", "message": "Invalid Credentials"})

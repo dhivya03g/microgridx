@@ -9,7 +9,6 @@
 <style>
 
 /* ================= GLOBAL ================= */
-
 body{
 background:#020617;
 color:#e2e8f0;
@@ -19,7 +18,6 @@ overflow-x:hidden;
 }
 
 /* ================= NAVBAR ================= */
-
 .navbar{
 display:flex;
 justify-content:space-between;
@@ -53,7 +51,6 @@ color:#020617;
 }
 
 /* ================= TITLE ================= */
-
 h1{
 text-align:center;
 margin:20px 0;
@@ -61,7 +58,6 @@ color:#38bdf8;
 }
 
 /* ================= CLOCK ================= */
-
 #clock{
 text-align:center;
 color:#94a3b8;
@@ -69,7 +65,6 @@ margin-bottom:10px;
 }
 
 /* ================= LAYOUT ================= */
-
 .main-layout{
 display:flex;
 justify-content:center;
@@ -79,7 +74,6 @@ padding:20px;
 }
 
 /* ================= PANELS ================= */
-
 .hardware-panel,
 .digital-panel{
 background:#0f172a;
@@ -93,14 +87,12 @@ box-shadow:0 6px 15px rgba(0,0,0,0.4);
 .digital-panel{ width:720px; }
 
 /* ================= SECTION ================= */
-
 .section-title{
 color:#38bdf8;
 margin-top:15px;
 }
 
 /* ================= DIGITAL TWIN ================= */
-
 .cube-wrapper{
 perspective:1200px;
 display:flex;
@@ -120,27 +112,16 @@ animation:rotateCube 20s linear infinite;
 position:absolute;
 width:320px;
 height:320px;
-
-/* glass */
 background:rgba(255,255,255,0.01);
-
-/* edges */
 border:1px solid rgba(0,255,255,0.6);
-
-/* glow */
-box-shadow:
-0 0 25px rgba(0,255,255,0.6),
-inset 0 0 10px rgba(0,255,255,0.2);
-
+box-shadow:0 0 25px rgba(0,255,255,0.6), inset 0 0 10px rgba(0,255,255,0.2);
 backdrop-filter: blur(6px);
-
 display:flex;
 flex-direction:column;
 align-items:center;
 justify-content:center;
 }
 
-/* flow line */
 .cube-face::after{
 content:"";
 width:60%;
@@ -156,7 +137,6 @@ from{opacity:0.3;}
 to{opacity:1;}
 }
 
-/* floating */
 .cube-face img{
 width:90px;
 animation:float 3s ease-in-out infinite;
@@ -181,7 +161,6 @@ animation:float 3s ease-in-out infinite;
 }
 
 /* ================= CARDS ================= */
-
 .container{
 display:grid;
 grid-template-columns:repeat(2,1fr);
@@ -203,7 +182,6 @@ box-shadow:0 0 15px rgba(56,189,248,0.4);
 }
 
 /* ================= BATTERY ================= */
-
 .battery-bar{
 width:100%;
 height:8px;
@@ -219,7 +197,6 @@ border-radius:6px;
 }
 
 /* ================= STATUS ================= */
-
 .status{
 text-align:center;
 font-size:18px;
@@ -227,7 +204,6 @@ margin-top:20px;
 }
 
 /* ================= AI ================= */
-
 #aiSummary{
 margin-top:15px;
 padding:12px;
@@ -238,7 +214,6 @@ color:#38bdf8;
 }
 
 /* ================= HEALTH ================= */
-
 #healthBox{
 margin-top:10px;
 padding:10px;
@@ -248,7 +223,6 @@ border:1px solid #334155;
 }
 
 /* ================= ALERTS ================= */
-
 .alerts{
 margin-top:20px;
 padding:15px;
@@ -257,12 +231,7 @@ border:1px solid #334155;
 border-radius:10px;
 }
 
-.alert{
-margin-top:6px;
-}
-
 /* ================= GSM ================= */
-
 #gsmBox{
 margin-top:15px;
 padding:10px;
@@ -272,7 +241,6 @@ border-radius:8px;
 }
 
 /* ================= POPUP ================= */
-
 .popup{
 position:fixed;
 top:20px;
@@ -284,7 +252,6 @@ z-index:999;
 }
 
 /* ================= GRAPH ================= */
-
 canvas{
 margin-top:25px;
 background:#020617;
@@ -304,11 +271,11 @@ padding:10px;
 <button onclick="scrollToSection('overview')">Overview</button>
 <button onclick="scrollToSection('alerts')">Alerts</button>
 <button onclick="scrollToSection('analytics')">Analytics</button>
+<button onclick="logout()">Logout</button>
 </div>
 </div>
 
 <h1>Smart Microgrid Monitoring System</h1>
-
 <div id="clock"></div>
 
 <div class="main-layout">
@@ -318,14 +285,12 @@ padding:10px;
 
 <div class="cube-wrapper">
 <div class="twin-cube">
-
 <div class="cube-face front"><img src="images/solar.png"><p>Solar</p></div>
 <div class="cube-face right"><img src="images/battery.png"><p>Battery</p></div>
 <div class="cube-face left"><img src="images/esp32.png"><p>ESP32</p></div>
 <div class="cube-face back"><img src="images/dht22.png"><p>DHT22</p></div>
 <div class="cube-face top"><p>MicroGridX</p></div>
 <div class="cube-face bottom"><p>Energy</p></div>
-
 </div>
 </div>
 </div>
@@ -358,7 +323,6 @@ padding:10px;
 <div id="gsmBox">📡 GSM Ready</div>
 
 <h2 id="analytics" class="section-title">Energy Analytics</h2>
-
 <canvas id="energyChart"></canvas>
 
 </div>
@@ -367,30 +331,30 @@ padding:10px;
 
 <script>
 
-function scrollToSection(id){
-document.getElementById(id).scrollIntoView({behavior:'smooth'})
+// AUTH CHECK
+function checkAuth(){
+let user = localStorage.getItem("user")
+if(!user){
+alert("Please login")
+window.location.href="login.html"
+}
 }
 
-function showPopup(msg,color){
-let p=document.createElement("div")
-p.className="popup"
-p.style.background=color
-p.innerText=msg
-document.body.appendChild(p)
-setTimeout(()=>p.remove(),3000)
+// LOGOUT
+function logout(){
+localStorage.removeItem("user")
+window.location.href="login.html"
 }
 
-function sendSMS(msg){
-gsmBox.innerText="📡 SMS: "+msg
-}
-
+// CLOCK
 setInterval(()=>{
 clock.innerText="⏱ "+new Date().toLocaleTimeString()
 },1000)
 
+// FETCH DATA
 async function fetchData(){
 try{
-const res=await fetch("http://127.0.0.1:5000/api/data")
+const res=await fetch("https://microgridx.onrender.com/api/data")
 const data=await res.json()
 
 solar.innerText=data.energy_status.solar_power+" W"
@@ -398,45 +362,20 @@ battery.innerText=data.energy_status.battery_level+"%"
 temp.innerText=data.energy_status.temperature+" °C"
 prediction.innerText=data.energy_status.predicted_demand+" W"
 
-batteryLevel.style.width=data.energy_status.battery_level+"%"
+document.getElementById("battery-level").style.width=data.energy_status.battery_level+"%"
 
-let mode=data.decision.energy_mode
-systemStatus.innerText="Mode: "+mode
-
-aiSummary.innerText="🧠 AI: "+data.decision.system_action
-
-let health=data.system_health
-healthStatus.innerText=health
-
-if(health==="GREEN") healthStatus.style.color="#22c55e"
-else if(health==="YELLOW") healthStatus.style.color="#facc15"
-else healthStatus.style.color="#ef4444"
-
-if(data.energy_status.battery_level<25){
-showPopup("⚠ Low Battery","red")
-sendSMS("Low Battery")
-alert1.innerText="⚠ Battery Low"
-}
-
-if(data.energy_status.predicted_demand>data.energy_status.solar_power){
-showPopup("⚡ High Demand","orange")
-sendSMS("Demand High")
-alert2.innerText="⚡ Demand High"
-}
-
-if(data.energy_status.temperature>40){
-showPopup("🔥 High Temp","red")
-sendSMS("Temp High")
-alert3.innerText="🔥 Temperature High"
-}
+systemStatus.innerText="Mode: "+data.decision.energy_mode
+aiSummary.innerText="🧠 "+data.decision.system_action
 
 }catch{
 systemStatus.innerText="Backend not connected"
 }
 }
 
+checkAuth()
 setInterval(fetchData,2000)
 
+// GRAPH
 new Chart(document.getElementById("energyChart"),{
 type:"line",
 data:{

@@ -1,0 +1,14 @@
+{
+  "houses": [
+    {
+      "house_id": "A",
+      "solar_power": 600,
+      "demand": 400
+    },
+    {
+      "house_id": "B",
+      "solar_power": 200,
+      "demand": 350
+    }
+  ]
+}

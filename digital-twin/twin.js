@@ -574,3 +574,63 @@ updateGraph()
 
 loadDecisionData()
 updateGraph()
+
+// ------------------------------------
+// COMMUNITY LAYER INTEGRATION (UPGRADED)
+// ------------------------------------
+
+async function loadCommunityData(){
+
+    try{
+
+        const res = await fetch("../../backend/community_layer/sharing_output.json")
+        const data = await res.json()
+
+        if(data.energy_transfers && data.energy_transfers.length > 0){
+
+            let transfer = data.energy_transfers[0]
+
+            // ---------------- UI TEXT ----------------
+
+            if(document.getElementById("houseA")){
+                document.getElementById("houseA").innerText = "House " + transfer.from
+                document.getElementById("houseA").style.color = "#22c55e" // green
+            }
+
+            if(document.getElementById("houseB")){
+                document.getElementById("houseB").innerText = "House " + transfer.to
+                document.getElementById("houseB").style.color = "#ef4444" // red
+            }
+
+            if(document.getElementById("energyTransfer")){
+                document.getElementById("energyTransfer").innerText =
+                    "⚡ " + transfer.energy + " W Energy Shared"
+            }
+
+            // ---------------- GLOW EFFECT ----------------
+
+            let cards = document.querySelectorAll(".card")
+
+            if(cards.length >= 2){
+                cards[0].classList.add("active-source")
+                cards[1].classList.add("active-destination")
+            }
+
+            // ---------------- SMART MESSAGE ----------------
+
+            if(document.getElementById("communityMsg")){
+                document.getElementById("communityMsg").innerText =
+                    "⚡ Smart sharing: " + transfer.energy + "W from House " +
+                    transfer.from + " → House " + transfer.to
+            }
+
+        }
+
+    }catch(e){
+        console.log("Community data not ready")
+    }
+}
+
+// AUTO REFRESH
+setInterval(loadCommunityData,2000)
+loadCommunityData()

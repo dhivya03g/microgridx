@@ -1,0 +1,9 @@
+{
+    "energy_transfers": [
+        {
+            "from": "A",
+            "to": "B",
+            "energy": 150
+        }
+    ]
+}

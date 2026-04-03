@@ -509,13 +509,24 @@ border-radius:8px;
 
 .popup{
 position:fixed;
-top:20px;
-right:20px;
-padding:12px 18px;
+top:80px;
+left:20px;
+
+display:inline-block;   
+width:auto;             
+max-width:250px;        
+
+padding:10px 15px;
 border-radius:8px;
 color:white;
 z-index:999;
+
+font-size:14px;
+white-space:nowrap;     
+
+box-shadow:0 0 15px rgba(255,0,0,0.6);
 }
+
 
 canvas{
 margin-top:25px;
@@ -523,7 +534,68 @@ background:#020617;
 border-radius:8px;
 padding:10px;
 }
+/* 🌤 PROFESSIONAL LIGHT THEME */
 
+/* 🌤 MODERN LIGHT THEME (SOFT TECH LOOK) */
+
+body.light-mode {
+    background: linear-gradient(135deg, #e0f2fe, #f8fafc);
+    color: #0f172a !important;
+}
+
+/* NAVBAR */
+body.light-mode .navbar {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid #cbd5f5;
+}
+
+/* CARDS */
+body.light-mode .card,
+body.light-mode .hardware-panel,
+body.light-mode .digital-panel {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(14,165,233,0.2);
+    color: #0f172a !important;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+/* TITLES */
+body.light-mode .section-title {
+    color: #0284c7;
+}
+
+/* BOXES */
+body.light-mode #aiSummary,
+body.light-mode #healthBox,
+body.light-mode #gsmBox,
+body.light-mode .alerts {
+    background: rgba(255,255,255,0.6);
+    border: 1px solid rgba(14,165,233,0.2);
+}
+
+/* CHART BACKGROUND */
+body.light-mode canvas {
+    background: transparent !important;
+}
+
+/* DIGITAL CUBE EFFECT */
+body.light-mode .cube-face {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(14,165,233,0.4);
+    box-shadow: 0 0 20px rgba(14,165,233,0.3);
+}
+
+/* ARROW */
+body.light-mode .arrow {
+    color: #0284c7;
+}
+
+/* COMMUNITY TEXT */
+body.light-mode #communityMsg {
+    color: #0284c7;
+}
 </style>
 </head>
 
@@ -532,9 +604,11 @@ padding:10px;
 <div class="navbar">
 <h2>⚡ MicroGridX</h2>
 <div>
-<button onclick="scrollToSection('overview')">Overview</button>
-<button onclick="scrollToSection('alerts')">Alerts</button>
-<button onclick="scrollToSection('analytics')">Analytics</button>
+<button onclick="scrollToSection('overviewSection')">Overview</button>
+<button onclick="scrollToSection('alertsSection')">Alerts</button>
+<button onclick="scrollToSection('analyticsSection')">Analytics</button>
+<button onclick="scrollToSection('communitySection')">Community</button>
+ <button id="themeBtn" onclick="toggleTheme()">🌙</button>
 </div>
 </div>
 
@@ -562,7 +636,7 @@ padding:10px;
 </div>
 </div>
 
-<div class="digital-panel">
+<div class="digital-panel" id="overviewSection">
 
 <h2 id="overview" class="section-title">System Overview</h2>
 
@@ -581,7 +655,7 @@ padding:10px;
 
 <h2 id="alerts" class="section-title">Smart Alerts</h2>
 
-<div class="alerts">
+<div class="alerts" id="alertsSection">
 <div class="alert" id="alert1"></div>
 <div class="alert" id="alert2"></div>
 <div class="alert" id="alert3"></div>
@@ -591,7 +665,9 @@ padding:10px;
 
 <h2 id="analytics" class="section-title">Energy Analytics</h2>
 
-<canvas id="energyChart"></canvas>
+<div id="analyticsSection">
+    <canvas id="energyChart"></canvas>
+</div>
 
 </div>
 </div>
@@ -691,7 +767,95 @@ datasets:[
 }
 })
 
-</script>
 
+</script>
+<!-- ✅ COMMUNITY UI HERE -->
+ <div id="communitySection">
+<h2 class="section-title">🌐 Community Energy Sharing</h2>
+
+<div style="display:flex;justify-content:center;align-items:center;gap:40px;margin-top:25px;flex-wrap:wrap;">
+
+    <!-- House A -->
+    <div class="card" style="text-align:center;padding:15px 25px;">
+        <h3>🏠 House A</h3>
+        <p id="houseA">--</p>
+        <small style="color:#22c55e;">Energy Source</small>
+    </div>
+
+    <!-- Arrow -->
+    <div class="arrow" style="font-size:32px;">⚡➡️</div>
+
+    <!-- House B -->
+    <div class="card" style="text-align:center;padding:15px 25px;">
+        <h3>🏠 House B</h3>
+        <p id="houseB">--</p>
+        <small style="color:#ef4444;">Energy Receiver</small>
+    </div>
+</div>
+</div>
+
+<!-- Energy Transfer -->
+<div style="text-align:center;margin-top:20px;">
+    <h3 id="energyTransfer">Energy Transfer: --</h3>
+
+    <!-- ✅ NEW SMART MESSAGE -->
+    <p id="communityMsg" style="margin-top:10px;color:#38bdf8;">
+        Smart energy redistribution active ⚡
+    </p>
+</div>
+
+<!-- EXISTING SCRIPT -->
+<script>
+   // your existing JS code
+</script>
+<script>
+function toggleTheme(){
+    console.log("Theme clicked")  // DEBUG
+
+    document.body.classList.toggle("light-mode")
+
+    let btn = document.getElementById("themeBtn")
+
+    if(document.body.classList.contains("light-mode")){
+        btn.innerText = "☀️"
+    } else {
+        btn.innerText = "🌙"
+    }
+    function scrollToSection(id){
+    const section = document.getElementById(id)
+
+    if(section){
+        const yOffset = -70 // adjust based on navbar height
+        const y = section.getBoundingClientRect().top + window.pageYOffset + yOffset
+
+        window.scrollTo({
+            top: y,
+            behavior: "smooth"
+        })
+    }
+}
+}
+
+</script>
+<script>
+function scrollToSection(id){
+    console.log("Scrolling:", id);
+
+    const section = document.getElementById(id);
+
+    if(section){
+        const yOffset = -80;
+        const y = section.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+        window.scrollTo({
+            top: y,
+            behavior: "smooth"
+        });
+    } else {
+        console.log("Section not found:", id);
+    }
+}
+</script>
 </body>
+<script src="js/twin.js"></script>
 </html>

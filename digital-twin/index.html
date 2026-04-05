@@ -646,13 +646,29 @@ body.light-mode #communityMsg {
 <div class="card"><h4>🌡 Temperature</h4><p id="temp">--</p></div>
 <div class="card"><h4>🔮 Demand</h4><p id="prediction">--</p></div>
 </div>
+<h3>🔮 Simulation Mode</h3>
+
+<input type="range" min="100" max="500" value="200" id="simDemand">
+
+<p>Simulated Demand: <span id="simValue">200</span> W</p>
 
 <div class="status" id="systemStatus">Waiting...</div>
 
 <div id="aiSummary">🧠 AI Analysis: Waiting...</div>
-
+<div id="recommendBox" style="margin-top:15px;padding:10px;border:1px solid cyan;border-radius:8px;">
+💡 Recommendation: Waiting...
+</div>
 <div id="healthBox">System Health: <span id="healthStatus">--</span></div>
-
+<div id="gameBox" style="margin-top:15px;padding:10px;border:1px solid #22c55e;border-radius:8px;">
+    <div id="costBox" style="margin-top:15px;padding:10px;border:1px solid #38bdf8;border-radius:8px;">
+        <button onclick="startVoice()" style="margin-top:15px;padding:10px;border-radius:8px;border:none;background:#38bdf8;color:black;cursor:pointer;">
+🎤 Ask System
+</button>
+💰 Cost: ₹<span id="cost">0</span><br>
+💚 Saved: ₹<span id="saved">0</span>
+</div>
+🏆 Energy Score: <span id="score">0</span>
+</div>
 <h2 id="alerts" class="section-title">Smart Alerts</h2>
 
 <div class="alerts" id="alertsSection">
@@ -711,11 +727,42 @@ systemStatus.innerText="Mode: "+data.decision.energy_mode+" ✅"
 solar.innerText=data.energy_status.solar_power+" W"
 battery.innerText=data.energy_status.battery_level+"%"
 temp.innerText=data.energy_status.temperature+" °C"
-prediction.innerText=data.energy_status.predicted_demand+" W"
+prediction.innerText = simulatedDemand + " W"
 
 document.getElementById("battery-level").style.width=data.energy_status.battery_level+"%"
 
 aiSummary.innerText="🧠 AI: "+data.decision.system_action
+// 🎮 Gamification Logic
+let score = Math.floor(data.energy_status.solar_power / 10)
+
+document.getElementById("score").innerText = score
+
+if(score > 25){
+showPopup("🏆 Excellent Energy Saving!", "green")
+}
+
+// 💰 Cost Calculation
+let cost = (simulatedDemand * 0.02).toFixed(2)
+let saved = (data.energy_status.solar_power * 0.015).toFixed(2)
+
+document.getElementById("cost").innerText = cost
+document.getElementById("saved").innerText = saved
+
+// 🧠 AI Recommendation Logic
+let recommendation = ""
+
+if(data.energy_status.battery_level < 30){
+    recommendation = "⚠ Reduce usage to save battery"
+}
+else if(simulatedDemand > data.energy_status.solar_power){
+    recommendation = "⚡ Use appliances after solar peak"
+}
+else{
+    recommendation = "✅ System running optimally"
+}
+
+document.getElementById("recommendBox").innerText =
+"💡 Recommendation: " + recommendation
 
 let health=data.system_health
 healthStatus.innerText=health
@@ -752,7 +799,7 @@ alert3.innerText="🔥 Temperature High"
 systemStatus.innerText="⏳ Server waking up..."
 }
 }
-
+let simulatedDemand = 200
 setInterval(fetchData,2000)
 
 // GRAPH
@@ -854,6 +901,43 @@ function scrollToSection(id){
     } else {
         console.log("Section not found:", id);
     }
+}
+let slider = document.getElementById("simDemand")
+
+if(slider){
+slider.oninput = function(){
+simulatedDemand = this.value
+document.getElementById("simValue").innerText = this.value
+}
+}
+// 🎤 Voice Assistant
+function startVoice(){
+
+let recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)()
+
+recognition.start()
+
+recognition.onresult = function(event){
+
+let text = event.results[0][0].transcript.toLowerCase()
+
+if(text.includes("status")){
+alert("System is " + systemStatus.innerText)
+}
+
+else if(text.includes("battery")){
+alert("Battery level is " + battery.innerText)
+}
+
+else if(text.includes("temperature")){
+alert("Temperature is " + temp.innerText)
+}
+
+else{
+alert("Command not recognized")
+}
+
+}
 }
 </script>
 </body>

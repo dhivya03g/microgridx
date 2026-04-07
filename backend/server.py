@@ -127,6 +127,14 @@ def get_data():
         return jsonify({"error": str(e)})
 
 # =========================
+# 📁 ADDITION (STATIC JS ROUTE)
+# =========================
+
+@app.route('/static/js/<path:filename>')
+def serve_js(filename):
+    return send_from_directory('static/js', filename)
+
+# =========================
 # 🚀 RUN
 # =========================
 
